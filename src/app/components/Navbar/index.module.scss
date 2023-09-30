@@ -1,0 +1,13 @@
+@use '../../assets/scss/_variables.scss' as variables;
+
+.main-nav {
+    background-color: variables.$dark-bg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: variables.$outer-padding;
+
+    .blue {
+        color: blue;
+    }
+}

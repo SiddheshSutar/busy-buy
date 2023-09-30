@@ -1,0 +1,49 @@
+@use '../../assets/scss/_variables.scss' as variables;
+
+.album-list-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+
+    .album-card {
+        min-height: 100px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        align-items: center;
+        // border: 1px solid variables.$dark-bg;
+        border-radius: 4px;
+        color: variables.$font-white;
+        font-weight: bold;
+        font-size: 2rem;
+        font-family: sans-serif;
+        background: rgb(255,245,245);
+        background: linear-gradient(176deg, #fff 0%, rgba(248,230,251,1) 48%, rgba(214,71,242,1) 100%);
+        transition: all 0.1s linear;
+        position: relative;
+
+        ::before {
+            position: absolute;
+            content: '';
+            top: -1%;
+            left: -1%;
+            width: 102%;
+            height: 102%;
+            border-radius: 6px;
+            background: rgb(255,245,245);
+            background: linear-gradient(176deg, rgba(214,71,242,1)  0%, rgba(248,230,251,1) 48%, transparent 100%);
+            z-index: -1;
+            transition: all 0.005s ease-in-out;
+            transform-origin: top center;
+        }
+
+        &:hover {
+            ::before {
+                transform: scale(0);
+            }
+            transform: scale(1.05);
+        }
+    }
+}

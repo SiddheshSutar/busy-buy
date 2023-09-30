@@ -1,0 +1,41 @@
+@use './_variables.scss' as variables;
+
+.container {
+    padding: 30px;
+    display: grid;
+    place-items: center;
+
+    input, button {
+        padding: 10px 20px;
+        font-size: 1.5rem;
+        line-height: 1;
+        font-family: sans-serif;
+    }
+
+    input {
+        border: 0;
+        min-width: 50ch;
+    }
+
+    button {
+        font-weight: bold;
+        color: variables.$font-white;
+        cursor: pointer;
+
+        :disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+    }
+
+    .btn-clear {
+        background-color: variables.$red;
+        border: 2px solid variables.$red;
+
+    }
+
+    .btn-submit {
+        background-color: variables.$green;
+        border:2px solid  variables.$green;
+    }
+}
