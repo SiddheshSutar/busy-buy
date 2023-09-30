@@ -16,9 +16,11 @@
     "@mui/material": "^5.14.10",
     "antd": "^5.9.2",
     "axios": "^1.5.0",
+    "firebase": "^10.4.0",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-router-dom": "^6.16.0",
     "sass": "^1.66.1",
     "zingtouch": "^1.0.6"
   }
