@@ -6,15 +6,15 @@ import Image from 'next/image';
 const Navbar = () => {
     return (
         <div className={styles['main-nav']}>
-            <Image
+            {/* <Image
                 src={'/images/image-gallery.png'}
                 width={50}
                 height={50}
                 style={{
                     color: '#fff'
                 }}
-            />
-
+            /> */}
+            Busy Buy
         </div>
     );
 }
