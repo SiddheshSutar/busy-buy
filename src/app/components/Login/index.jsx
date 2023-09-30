@@ -1,10 +1,11 @@
 'use client'
-import { Button, TextField } from '@mui/material';
+import { Button, Container, Grid, TextField } from '@mui/material';
 import styles from './index.module.scss'
-import { useState } from 'react';
-import { addDoc, collection } from '@firebase/firestore';
+import { useEffect, useState } from 'react';
+import { addDoc, collection, getDocs } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
 import { useSnackbarValue } from '../../../../snackBarContext';
+import { db } from '../../../../fireStore';
 
 const Login = () => {
 
@@ -13,6 +14,20 @@ const Login = () => {
     const [password, setPassword] = useState('')
 
     const { toggle } = useSnackbarValue()
+
+    useEffect(() => {
+        (
+            async () => {
+                const snapshot = await getDocs(collection(db, USER_DB_NAME));
+
+                const records = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                console.log('hex: ', records)
+            }
+        )()
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -32,36 +47,51 @@ const Login = () => {
             severity: 'success'
         })
 
-        // const userRef = collection(db, USER_DB_NAME);
-        // const docRef = await addDoc(userRef, {
-        //     name, email, password
-        // });
+        const userRef = collection(db, USER_DB_NAME);
+        const docRef = await addDoc(userRef, {
+            name, email, password
+        });
 
     }
     return (
         <>
-            <div className={styles.container}>
-                <TextField
-                    value={name}
-                    name={"name"}
-                    type='text'
-                    onChange={e => setName(e.target.value)}
-                />
-                <TextField
-                    value={email}
-                    name={"email"}
-                    type='email'
-                    onChange={e => setEmail(e.target.value)}
-                />
-                <TextField
-                    value={password}
-                    name='password'
-                    type='password'
-                    onChange={e => setPassword(e.target.value)}
-                />
-                <Button type='button' color='primary' onClick={e => handleSubmit(e)}>
-                    Submit
-                </Button>
+            <div className={styles['container']}>
+                <h3>Sign Up</h3>
+                <Grid container className={styles['form-container']} justifyContent={'center'}>
+                    <Grid item lg={12}>
+                        <TextField
+                            placeholder='Name'
+                            value={name}
+                            name={"name"}
+                            type='text'
+                            onChange={e => setName(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item lg={12}>
+                        <TextField
+                            placeholder='Email'
+                            value={email}
+                            name={"email"}
+                            type='email'
+                            onChange={e => setEmail(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item lg={12}>
+                        <TextField
+                            placeholder='Password'
+                            value={password}
+                            name='password'
+                            type='password'
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item lg={12}>
+
+                        <Button variant="contained" type='button' color='primary' onClick={e => handleSubmit(e)}>
+                            Submit
+                        </Button>
+                    </Grid>
+                </Grid>
             </div>
         </>
     );
