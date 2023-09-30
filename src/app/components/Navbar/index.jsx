@@ -2,6 +2,7 @@
 import React from 'react'
 import styles from './index.module.scss'
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Navbar = () => {
     return (
@@ -14,7 +15,14 @@ const Navbar = () => {
                     color: '#fff'
                 }}
             /> */}
+            <p>
             Busy Buy
+            </p>
+            <div>
+                {/* <a href="sign up" onClick={}> */}
+                    Sign Up
+                {/* </a> */}
+            </div>
         </div>
     );
 }
