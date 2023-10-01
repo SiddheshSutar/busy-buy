@@ -73,7 +73,7 @@ const HomePage = () => {
                                                     alt={'product-image'}
                                                     className={styles['image']}
                                                 />
-                                                <div className={styles['title']}>
+                                                <div className={styles['title']} title={item.title}>
                                                     {
                                                         item.title.length > 36 ?
                                                         item.title.substring(0,36) + '...':
@@ -81,7 +81,7 @@ const HomePage = () => {
                                                     }
                                                 </div>
                                                 <button className={styles['button']} type='button' onClick={() => {}}>
-                                                    + Cart                                                </button>
+                                                    Add to Cart                                                </button>
                                             </div>
                                     ))
                                 }

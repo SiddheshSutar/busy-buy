@@ -29,9 +29,22 @@
 
             button {
                 background-color: variables.$dark-bg;
-                border: 2px solid variables.$dark-bg;
-                color: variables.$font-white;
+                border: 2px solid #1976d2;
+                color: #fff;
                 margin-top: auto;
+                letter-spacing: 2px;
+                cursor: pointer;
+                padding: 10px 20px;
+                transition: all 0.2s ease-in-out;
+                font-weight: bold;
+                font-family: monospace;
+                font-size: 20px;
+                line-height: 1;
+                
+                &:hover {
+                    text-shadow: 1px 0px 3px white;
+                    transform: scale(1.03);
+                }
             }
         }
 
