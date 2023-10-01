@@ -1,11 +1,13 @@
 'use client';
 import { useParams } from "next/navigation";
+import { AuthContextProvider } from "../../contexts/authContext";
+import { SnackbarContextProvider } from "../../../snackBarContext";
 import SignUp from "../components/SignUp";
-import { SnackbarContextProvider } from "@/contexts/snackBarContext";
-import { AuthContextProvider } from "@/contexts/authContext";
 
 const SignUpPage = () => {
     const params = useParams()
+
+    console.log('hex: ', params)
     return <>
         <SnackbarContextProvider>
             <AuthContextProvider>

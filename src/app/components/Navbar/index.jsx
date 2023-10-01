@@ -1,19 +1,13 @@
 'use client'
 import React from 'react'
 import styles from './index.module.scss'
-import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation'
-import { useRouter } from 'next/router'
 import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
 
-    // const params = useParams()
     const pathname = usePathname()
 
-
-    console.log('hex: ', pathname)
     return (
         <div className={styles['main-nav']}>
             {/* <Image

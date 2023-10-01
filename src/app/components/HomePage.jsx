@@ -1,19 +1,22 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import Navbar from './Navbar';
-
+import { fetchProducts } from '../../../services';
 
 
 const HomePage = () => {
 
     useEffect(() => {
-        fetchProducts('jewelery')
+        (
+            async () => {
+                const x = await fetchProducts('jewelery')
+                console.log('dexx: ', x)
+            }
+        )()
     }, [])
-    
+
 
     return (
         <>
-          {/* <Navbar /> */}
             <div className='body-wrapper'>
                 Homepage
             </div>

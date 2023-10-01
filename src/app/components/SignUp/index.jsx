@@ -4,8 +4,9 @@ import styles from './index.module.scss'
 import { useState } from 'react';
 import { addDoc, collection } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
-import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
+import { useSnackbarValue } from '@/contexts/snackBarContext';
+import { useRouter } from 'next/navigation';
 
 const SignUp = () => {
 

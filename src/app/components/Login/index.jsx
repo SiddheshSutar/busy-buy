@@ -4,9 +4,9 @@ import styles from './index.module.scss'
 import { useState } from 'react';
 import { addDoc, collection, getDocs, doc, query, where } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
-import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
 import { useRouter } from 'next/navigation'
+import { useSnackbarValue } from '@/contexts/snackBarContext';
 
 const LogIn = () => {
 

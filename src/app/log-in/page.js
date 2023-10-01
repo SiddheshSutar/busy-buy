@@ -1,8 +1,8 @@
 'use client';
 import { useParams } from "next/navigation";
-import { AuthContextProvider } from "../../../authContext";
-import { SnackbarContextProvider } from "../../../snackBarContext";
 import LogIn from "../components/LogIn";
+import { SnackbarContextProvider } from "@/contexts/snackBarContext";
+import { AuthContextProvider } from "@/contexts/authContext";
 
 const LogInPage = () => {
     return <>
