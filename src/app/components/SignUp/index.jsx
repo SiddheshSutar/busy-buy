@@ -7,7 +7,7 @@ import { USER_DB_NAME } from '../../../../constants';
 import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
 
-const LogIn = () => {
+const SignUp = () => {
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -15,6 +15,19 @@ const LogIn = () => {
 
     const { toggle } = useSnackbarValue()
 
+    useEffect(() => {
+        // (
+        //     async () => {
+        //         const snapshot = await getDocs(collection(db, USER_DB_NAME));
+
+        //         const records = snapshot.docs.map((doc) => ({
+        //             id: doc.id,
+        //             ...doc.data()
+        //         }));
+        //         console.log('hex: ', records)
+        //     }
+        // )()
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -28,17 +41,14 @@ const LogIn = () => {
             return
         }
 
-        // const snapshot = await getDocs(collection(db, USER_DB_NAME));
-
-        // const records = snapshot.docs.map((doc) => ({
-        //     id: doc.id,
-        //     ...doc.data()
-        // }));
-        // console.log('hex: ', records)
+        const userRef = collection(db, USER_DB_NAME);
+        const docRef = await addDoc(userRef, {
+            name, email, password
+        });
 
         toggle({
             open: true,
-            message: 'Logged In',
+            message: 'Created',
             severity: 'success'
         })
 
@@ -46,8 +56,17 @@ const LogIn = () => {
     return (
         <>
             <div className={styles['container']}>
-                <h3>Log In</h3>
+                <h3>Sign Up</h3>
                 <Grid container className={styles['form-container']} justifyContent={'center'}>
+                    <Grid item lg={12}>
+                        <TextField
+                            placeholder='Name'
+                            value={name}
+                            name={"name"}
+                            type='text'
+                            onChange={e => setName(e.target.value)}
+                        />
+                    </Grid>
                     <Grid item lg={12}>
                         <TextField
                             placeholder='Email'
@@ -78,4 +97,4 @@ const LogIn = () => {
     );
 }
 
-export default LogIn;
+export default SignUp;

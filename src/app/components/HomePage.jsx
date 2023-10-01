@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import Navbar from './Navbar';
 
 
 
@@ -13,9 +14,12 @@ const HomePage = () => {
     //   };
 
     return (
-        <div className='body-wrapper'>
-            Homepage
-        </div>
+        <>
+          {/* <Navbar /> */}
+            <div className='body-wrapper'>
+                Homepage
+            </div>
+        </>
     )
 }
 
