@@ -1,8 +1,8 @@
 'use client'
-import { Button, Container, Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import styles from './index.module.scss'
-import { useEffect, useState } from 'react';
-import { addDoc, collection, getDocs, getDoc, doc, query, where } from '@firebase/firestore';
+import { useState } from 'react';
+import { addDoc, collection, getDocs, doc, query, where } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
 import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
