@@ -32,7 +32,6 @@ const LogIn = () => {
         const querySnapshot = await getDocs(docRef);
         let accounts = []
         querySnapshot.forEach((doc) => {
-            // console.log('hexx: ', doc.id, doc.data());
             accounts.push({
                 [doc.id]: doc.data()
             })

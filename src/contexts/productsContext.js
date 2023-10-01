@@ -4,7 +4,8 @@ const { createContext, useState, useContext } = require("react");
 const initialState = {
     loading: false,
     products: [],
-    cart: []
+    cart: [],
+    maxCartValue: 0
 }
 
 const ProductsContext = createContext()
@@ -26,12 +27,19 @@ export const ProductsContextProvider = ({ children }) => {
                     loading: payload
                 }))
                 break;
-            case 'SET_ALL':
+            case 'SET_ALL': {
+                let max = 0
+                for (const item of payload) {
+                    if (item.price > max) max = item.price
+                }
+
                 setState(state => ({
                     ...state,
-                    products: payload
+                    products: payload,
+                    maxCartValue: max
                 }))
                 break;
+            }
             default:
                 break;
         }
