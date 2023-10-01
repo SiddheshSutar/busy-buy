@@ -2,7 +2,7 @@
 import { Button, Container, Grid, TextField } from '@mui/material';
 import styles from './index.module.scss'
 import { useEffect, useState } from 'react';
-import { addDoc, collection, getDocs } from '@firebase/firestore';
+import { addDoc, collection, getDocs, getDoc, doc, query, where } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
 import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
@@ -16,17 +16,21 @@ const SignUp = () => {
     const { toggle } = useSnackbarValue()
 
     useEffect(() => {
-        // (
-        //     async () => {
-        //         const snapshot = await getDocs(collection(db, USER_DB_NAME));
+        (
+            async () => {
+                // const snapshot = await getDocs(collection(db, USER_DB_NAME));
 
-        //         const records = snapshot.docs.map((doc) => ({
-        //             id: doc.id,
-        //             ...doc.data()
-        //         }));
-        //         console.log('hex: ', records)
-        //     }
-        // )()
+                // const records = snapshot.docs.map((doc) => ({
+                //     id: doc.id,
+                //     ...doc.data()
+                // }));
+
+                // const docRef = doc(db, USER_DB_NAME, "123");
+                // const docSnap = await getDoc(docRef);
+
+                
+            }
+        )()
     }, [])
 
     const handleSubmit = async (e) => {

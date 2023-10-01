@@ -2,24 +2,24 @@
 import { Button, Container, Grid, TextField } from '@mui/material';
 import styles from './index.module.scss'
 import { useEffect, useState } from 'react';
-import { addDoc, collection, getDocs } from '@firebase/firestore';
+import { addDoc, collection, getDocs, getDoc, doc, query, where } from '@firebase/firestore';
 import { USER_DB_NAME } from '../../../../constants';
 import { useSnackbarValue } from '../../../../snackBarContext';
 import { db } from '../../../../fireStore';
+import { useRouter } from 'next/navigation'
 
 const LogIn = () => {
 
     const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const { toggle } = useSnackbarValue()
-
+    const router = useRouter()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (!name || !email || !password) {
+        if (!name || !password) {
             toggle({
                 open: true,
                 message: 'Validation error',
@@ -28,21 +28,35 @@ const LogIn = () => {
             return
         }
 
-        // const snapshot = await getDocs(collection(db, USER_DB_NAME));
+        const docRef = query(collection(db, USER_DB_NAME), where('name', '==', name), where('password', '==', password));
+        const querySnapshot = await getDocs(docRef);
+        let accounts = []
+        querySnapshot.forEach((doc) => {
+            // console.log('hexx: ', doc.id, doc.data());
+            accounts.push({
+                [doc.id]: doc.data()
+            })
+            
+        });
 
-        // const records = snapshot.docs.map((doc) => ({
-        //     id: doc.id,
-        //     ...doc.data()
-        // }));
-        // console.log('hex: ', records)
+        if(accounts.length !== 1) {
+            toggle({
+                open: true,
+                message: 'Account search error',
+                severity: 'error'
+            })
+            return 
+        }
 
         toggle({
             open: true,
             message: 'Logged In',
             severity: 'success'
         })
+        router.push('/');
 
     }
+
     return (
         <>
             <div className={styles['container']}>
@@ -50,11 +64,11 @@ const LogIn = () => {
                 <Grid container className={styles['form-container']} justifyContent={'center'}>
                     <Grid item lg={12}>
                         <TextField
-                            placeholder='Email'
-                            value={email}
-                            name={"email"}
-                            type='email'
-                            onChange={e => setEmail(e.target.value)}
+                            placeholder='Name'
+                            value={name}
+                            name={"name"}
+                            type='text'
+                            onChange={e => setName(e.target.value)}
                         />
                     </Grid>
                     <Grid item lg={12}>
