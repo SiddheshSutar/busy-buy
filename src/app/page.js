@@ -1,4 +1,4 @@
-import HomePage from "./components/HomePage";
+import HomePage from "./components/HomePage/HomePage";
 import SignUp from "./components/SignUp";
 // import Router from "./components/Router";
 import CustomSnackbar from "./components/Snackbar";

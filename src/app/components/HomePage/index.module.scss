@@ -1,0 +1,25 @@
+.container {
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    .filters {
+    }
+
+    .products {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        max-width: 100%;
+
+        .image {
+            object-fit: contain;
+            width: 300px;
+            aspect-ratio: 1/1;
+        }
+
+        .product {
+            border: 1px;
+            padding: 10px;
+        }
+    }
+}

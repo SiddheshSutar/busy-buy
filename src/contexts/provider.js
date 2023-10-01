@@ -1,4 +1,5 @@
 import { AuthContextProvider } from "./authContext";
+import { ProductsContextProvider } from "./productsContext";
 import { SnackbarContextProvider } from "./snackBarContext";
 
 const Provider = ({ children }) => {
@@ -6,7 +7,9 @@ const Provider = ({ children }) => {
         <>
             <AuthContextProvider>
                 <SnackbarContextProvider>
-                    {children}
+                    <ProductsContextProvider>
+                        {children}
+                    </ProductsContextProvider>
                 </SnackbarContextProvider>
             </AuthContextProvider>
         </>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Navigate, RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "./HomePage";
+import HomePage from "./HomePage/HomePage";
 import Login from "./SignUp";
 import { NotFound } from "./NotFound";
 import Navbar from "./Navbar";

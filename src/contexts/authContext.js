@@ -1,5 +1,5 @@
 'use client';
-const { createContext, useState } = require("react");
+const { createContext, useState, useContext } = require("react");
 
 const initialState = {
     users: [],
@@ -31,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     return <>
-        <AuthContext.Provider value={{...state, action: userAction}}>
+        <AuthContext.Provider value={{...state, userAction}}>
             {children}
         </AuthContext.Provider>
     </>
