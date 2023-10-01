@@ -6,3 +6,5 @@ export const DEFAULT_SNACKBAR_OBJECT = {
     severity: 'info',
     message: ''
 }
+
+export const LS_TOKEN_NAME = 'logintoken'
