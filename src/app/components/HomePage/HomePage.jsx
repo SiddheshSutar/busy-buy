@@ -42,7 +42,7 @@ const HomePage = () => {
         <>
             <div className={styles['container']}>
                 <div className={styles['filters']}>
-                    <h5>Filters</h5>
+                    <h3>Filters</h3>
                     <Slider
                         size="small"
                         defaultValue={100}
@@ -75,11 +75,13 @@ const HomePage = () => {
                                                 />
                                                 <div className={styles['title']}>
                                                     {
-                                                        item.title.length > 20 ?
-                                                        item.title.substring(0,20) + '...':
+                                                        item.title.length > 36 ?
+                                                        item.title.substring(0,36) + '...':
                                                         item.title
                                                     }
                                                 </div>
+                                                <button className={styles['button']} type='button' onClick={() => {}}>
+                                                    + Cart                                                </button>
                                             </div>
                                     ))
                                 }

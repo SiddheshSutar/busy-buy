@@ -1,25 +1,40 @@
+@use '../../assets/scss/variables' as variables;
+
 .container {
     display: grid;
     grid-template-columns: 200px auto;
+    gap: 10px;
 
     .filters {
     }
 
     .products {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 10px;
         max-width: 100%;
-
-        .image {
-            object-fit: contain;
-            width: 300px;
-            aspect-ratio: 1/1;
-        }
 
         .product {
             border: 1px;
             padding: 10px;
+            background-color: #fff;
+            display: flex;
+    flex-direction: column;
+
+            .image {
+                object-fit: contain;
+                width: 100%;
+                aspect-ratio: 1/1;
+            }
+
+            button {
+                background-color: variables.$dark-bg;
+                border: 2px solid variables.$dark-bg;
+                color: variables.$font-white;
+                margin-top: auto;
+            }
         }
+
+        
     }
 }
