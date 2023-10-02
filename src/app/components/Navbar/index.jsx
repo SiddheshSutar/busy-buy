@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './index.module.scss'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
+import { isLoggedInViaCheckingLocal } from '../../../../helpers';
 
 const Navbar = () => {
 
@@ -23,17 +24,33 @@ const Navbar = () => {
                     Busy Buy
                 </Link>
             </p>
-            <div>
+            <div  className={styles['side-nav']}>
                 {
-                    pathname.includes('sign-up') ?
-                        <Link href="/log-in">
-                            Log In
-                        </Link> :
-                        <Link href="/sign-up">
-                            Sign Up
-                        </Link>
+                    isLoggedInViaCheckingLocal() &&
+                    <>
+                        <div>
+                            <Link href="/cart">
+                                Cart
+                            </Link>
+                        </div>
+                        <div>
+                            <Link href="/cart">
+                                Orders
+                            </Link>
+                        </div>
+                    </>
                 }
-
+                <div>
+                    {
+                        pathname.includes('sign-up') ?
+                            <Link href="/log-in">
+                                Log In
+                            </Link> :
+                            <Link href="/sign-up">
+                                Sign Up
+                            </Link>
+                    }
+                </div>
             </div>
         </div>
     );

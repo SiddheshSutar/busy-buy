@@ -21,10 +21,13 @@ export const AuthContextProvider = ({ children }) => {
     
     const userAction = (type, payload) => {
         switch (type) {
-            case 'ADD':
-                
+            case 'SET_USER':
+            case 'UPDATE_USER':
+                setState({
+                    ...state,
+                    signedInUser: payload
+                })
                 break;
-        
             default:
                 break;
         }

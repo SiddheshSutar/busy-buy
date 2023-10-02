@@ -7,7 +7,18 @@
     align-items: center;
     padding: variables.$outer-padding;
 
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
+
     .blue {
         color: blue;
+    }
+
+    .side-nav {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
     }
 }

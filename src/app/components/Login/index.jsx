@@ -8,6 +8,7 @@ import { db } from '../../../../fireStore';
 import { useRouter } from 'next/navigation'
 import { useSnackbarValue } from '@/contexts/snackBarContext';
 import { setLogInInLocal } from '../../../../helpers';
+import { useUserValue } from '@/contexts/authContext';
 
 const LogIn = () => {
 
@@ -15,6 +16,8 @@ const LogIn = () => {
     const [password, setPassword] = useState('')
 
     const { toggle } = useSnackbarValue()
+    const { signedInUser, userAction } = useUserValue()
+
     const router = useRouter()
 
     const handleSubmit = async (e) => {
@@ -53,7 +56,13 @@ const LogIn = () => {
             message: 'Logged In',
             severity: 'success'
         })
-        setLogInInLocal(accounts[0].name)
+        if(Object.keys(accounts[0])[0] && Object.values(accounts[0])[0]?.name) {
+            setLogInInLocal(JSON.stringify({
+                id: Object.keys(accounts[0])[0],
+                ...Object.values(accounts[0])[0]
+            }))
+            // userAction('SET_USER', Object.values(accounts[0])[0])
+        }
         router.push('/');
 
     }
