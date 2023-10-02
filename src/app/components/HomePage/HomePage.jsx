@@ -4,12 +4,15 @@ import { fetchProducts } from '../../../../services';
 import { useProductsValue } from '@/contexts/productsContext';
 import styles from './index.module.scss'
 import { Slider, Tooltip } from '@mui/material';
-
+import { isLoggedInViaCheckingLocal } from '../../../../helpers';
+import { useRouter } from 'next/navigation';
 
 const HomePage = () => {
 
     const { products, productsAction, loading, maxCartValue } = useProductsValue()
     const [visibleProducts, setVisibleProducts] = useState(products)
+
+    const router = useRouter()
 
     useEffect(() => {
         (
@@ -37,6 +40,16 @@ const HomePage = () => {
         );
     }
 
+    const handleAddToCart = () => {
+
+        if(!isLoggedInViaCheckingLocal()) {
+            router.push('/sign-up')
+            return
+        }
+
+
+    }
+
 
     return (
         <>
@@ -47,7 +60,7 @@ const HomePage = () => {
                         size="small"
                         defaultValue={100}
                         aria-label="Small"
-                        valueLabelDisplay="auto"
+                        valueLabelDisplay="on"
                         slots={{
                             valueLabel: ValueLabelComponent,
                           }}
@@ -80,8 +93,12 @@ const HomePage = () => {
                                                         item.title
                                                     }
                                                 </div>
-                                                <button className={styles['button']} type='button' onClick={() => {}}>
-                                                    Add to Cart                                                </button>
+                                                <div className={styles['btn-row']}>
+                                                    <div className={styles['price']}>{`₹ ${item.price}`}</div>
+                                                    <button className={styles['button']} type='button' onClick={() => handleAddToCart()}>
+                                                        Add to Cart
+                                                    </button>
+                                                </div>
                                             </div>
                                     ))
                                 }

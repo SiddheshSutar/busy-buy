@@ -7,6 +7,7 @@ import { USER_DB_NAME } from '../../../../constants';
 import { db } from '../../../../fireStore';
 import { useRouter } from 'next/navigation'
 import { useSnackbarValue } from '@/contexts/snackBarContext';
+import { setLogInInLocal } from '../../../../helpers';
 
 const LogIn = () => {
 
@@ -52,6 +53,7 @@ const LogIn = () => {
             message: 'Logged In',
             severity: 'success'
         })
+        setLogInInLocal(accounts[0].name)
         router.push('/');
 
     }

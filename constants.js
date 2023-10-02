@@ -1,5 +1,5 @@
-export const USER_DB_NAME = "myalbums"
-export const PRODUCT_DB_NAME = "myimages"
+export const USER_DB_NAME = "myusers"
+export const PRODUCT_DB_NAME = "myproducts"
 
 export const DEFAULT_SNACKBAR_OBJECT = {
     open: false,

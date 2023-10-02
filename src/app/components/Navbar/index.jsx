@@ -19,7 +19,9 @@ const Navbar = () => {
                 }}
             /> */}
             <p>
-                Busy Buy
+                <Link href="/">
+                    Busy Buy
+                </Link>
             </p>
             <div>
                 {

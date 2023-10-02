@@ -3,10 +3,9 @@
 .container {
     display: grid;
     grid-template-columns: 200px auto;
-    gap: 10px;
+    gap: 30px;
 
-    .filters {
-    }
+    .filters {}
 
     .products {
         display: grid;
@@ -19,7 +18,7 @@
             padding: 10px;
             background-color: #fff;
             display: flex;
-    flex-direction: column;
+            flex-direction: column;
 
             .image {
                 object-fit: contain;
@@ -27,27 +26,40 @@
                 aspect-ratio: 1/1;
             }
 
-            button {
-                background-color: variables.$dark-bg;
-                border: 2px solid #1976d2;
-                color: #fff;
+            .btn-row {
+                display: flex;
+                justify-content: space-between;
                 margin-top: auto;
-                letter-spacing: 2px;
-                cursor: pointer;
-                padding: 10px 20px;
-                transition: all 0.2s ease-in-out;
-                font-weight: bold;
-                font-family: monospace;
-                font-size: 20px;
-                line-height: 1;
                 
-                &:hover {
-                    text-shadow: 1px 0px 3px white;
-                    transform: scale(1.03);
+                .price {
+                    font-size: 25px;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                }
+
+                button {
+                    background-color: variables.$dark-bg;
+                    border: 2px solid #1976d2;
+                    color: #fff;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    padding: 8px 11px;
+                    transition: all 0.2s ease-in-out;
+                    font-weight: bold;
+                    font-family: monospace;
+                    font-size: 18px;
+                    line-height: 1;
+    
+                    &:hover {
+                        text-shadow: 1px 0px 3px white;
+                        transform: scale(1.03);
+                    }
                 }
             }
+
+            
         }
 
-        
+
     }
 }
