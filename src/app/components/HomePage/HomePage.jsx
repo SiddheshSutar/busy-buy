@@ -7,9 +7,9 @@ import { Slider, Tooltip } from '@mui/material';
 import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../helpers';
 import { useRouter } from 'next/navigation';
 import { db } from '../../../../fireStore';
-import { USER_DB_NAME } from '../../../../constants';
+import { CART_DB_NAME, USER_DB_NAME } from '../../../../constants';
 import { useUserValue } from '@/contexts/authContext';
-import { doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { useSnackbarValue } from '@/contexts/snackBarContext';
 
 const HomePage = () => {
@@ -20,6 +20,8 @@ const HomePage = () => {
 
     const [visibleProducts, setVisibleProducts] = useState(products)
     const [disabled, setDisabled] = useState(null)
+    const [cartDbList, setCartDbList] = useState(null)
+    const [cartQuantities, setCartQuantities] = useState(null)
 
     const router = useRouter()
 
@@ -32,7 +34,8 @@ const HomePage = () => {
                 productsAction('SET_LOADING', false)
                 productsAction('SET_ALL', productsArrRes)
                 setVisibleProducts(productsArrRes)
-                console.log('dexx: ', productsArrRes)
+
+                const x = await loadQuantityFromCart()
             }
         )()
 
@@ -40,7 +43,39 @@ const HomePage = () => {
         if(isLoggedInViaCheckingLocal()) {
             userAction('SET_USER', getLoggedInUserInLocal())
         }
+
     }, [])
+
+    /** REFERENCE FOR DELET DOC  */
+    useEffect(() => {
+        
+        // deleteDoc(doc(db, CART_DB_NAME, "7bjX7USDILqLrjois8gm"))
+        // deleteDoc(doc(db, CART_DB_NAME, "AxbL2BxDVGpxcllEipFh"))
+        // deleteDoc(doc(db, CART_DB_NAME, "Mgsr1Q35nZXPvLKNOCCs"))
+
+          
+    }, [])
+
+    const loadQuantityFromCart = async () => {
+         /** fetch cart */
+         const exisCartref = query(
+            collection(db, CART_DB_NAME),
+            where('forUser', '==', signedInUser.id),
+        );
+        const querySnapshot = await getDocs(exisCartref);
+        let cartDocs = []
+        querySnapshot.forEach((doc) => {
+            cartDocs.push({
+                [doc.id]: doc.data()
+            })
+            
+        });
+        const mappedList = cartDocs.map(item => ({
+            id: Object.keys(item)[0],
+            ...Object.values(item)[0]
+        }))
+        setCartDbList(mappedList)
+    }
 
 
     function ValueLabelComponent(props) {
@@ -68,17 +103,69 @@ const HomePage = () => {
         })
         setDisabled(index)
 
-        const editObj = { ...signedInUser }
+        const cartRef = collection(db, CART_DB_NAME);
 
-        const editUserRef = doc(db, USER_DB_NAME, editObj.id);
-
-        if (!editObj.cart) editObj.cart = []
-
-        const newObj = {
-            ...editObj,
-            cart: [productPassed, ...editObj.cart]
+        if(!cartDbList) {
+            toggle({
+                open: true,
+                // message: 'Some error occured while updating',
+                message: 'emty cartDbList',
+                severity: 'error'
+            })
+            return
         }
-        const editres = await updateDoc(editUserRef, newObj);
+
+        /**check User ka entry hai kya */
+        let docKey = null
+        const foundRecord = cartDbList.find(item => signedInUser.id === item.forUser)
+
+        if(
+            cartDbList && foundRecord
+        ) {
+
+            docKey = foundRecord.id
+            const updateProductRef = doc(db, CART_DB_NAME, docKey);
+
+            /**check Product ka entry hai kya */
+            let isUpdated = false
+            let updatedItems = [...foundRecord.items]
+            
+            updatedItems = updatedItems.map(itemObj => {
+                if (itemObj.product.id === productPassed.id) {
+                    isUpdated = true
+                    return {
+                        ...itemObj,
+                        quantity : itemObj.quantity + 1
+                    }
+                } else return itemObj
+            })
+
+            if(!isUpdated) updatedItems = [{
+                product: productPassed,
+                quantity: 1
+            }, ...updatedItems]
+
+            let newObj = {
+                forUser: signedInUser.id,
+                items: [...updatedItems]
+            }
+            
+            const editres = await updateDoc(updateProductRef, newObj);
+            const x = await loadQuantityFromCart()
+
+        } else {
+            const docRef = await addDoc(cartRef, {
+                forUser: signedInUser.id,
+                items: [
+                    {
+                        product: productPassed,
+                        quantity: 1
+                    }
+                ]
+            });
+            const x = await loadQuantityFromCart()
+
+        }
 
         toggle({
             open: true,
@@ -139,7 +226,12 @@ const HomePage = () => {
                                                     onClick={() => handleAddToCart(item, index)}
                                                     disabled={index === disabled}
                                                 >
-                                                   {index === disabled ? 'Adding...' : 'Add to Cart'}
+                                                    {
+                                                        index === disabled ?
+                                                            'Adding...' :
+                                                            item.quantity ? `+1` :
+                                                                'Add to Cart'
+                                                    }
                                                 </button>
                                             </div>
                                         </div>
