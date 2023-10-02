@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     products: [],
     cart: [],
+    orders: [],
     maxCartValue: 0
 }
 
@@ -27,6 +28,13 @@ export const ProductsContextProvider = ({ children }) => {
                     loading: payload
                 }))
                 break;
+            case 'SET_CART': {
+                setState(state => ({
+                    ...state,
+                    cart: payload
+                }))
+                break;
+            }
             case 'SET_ALL': {
                 let max = 0
                 for (const item of payload) {

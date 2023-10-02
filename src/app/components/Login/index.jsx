@@ -61,7 +61,7 @@ const LogIn = () => {
                 id: Object.keys(accounts[0])[0],
                 ...Object.values(accounts[0])[0]
             }))
-            // userAction('SET_USER', Object.values(accounts[0])[0])
+            userAction('SET_USER', Object.values(accounts[0])[0])
         }
         router.push('/');
 

@@ -14,14 +14,12 @@ import { useSnackbarValue } from '@/contexts/snackBarContext';
 
 const HomePage = () => {
 
-    const { products, productsAction, loading, maxCartValue } = useProductsValue()
+    const { products, productsAction, loading, maxCartValue, cart } = useProductsValue()
     const { signedInUser, userAction } = useUserValue()
     const { toggle } = useSnackbarValue()
 
     const [visibleProducts, setVisibleProducts] = useState(products)
     const [disabled, setDisabled] = useState(null)
-    const [cartDbList, setCartDbList] = useState(null)
-    const [cartQuantities, setCartQuantities] = useState(null)
 
     const router = useRouter()
 
@@ -57,6 +55,9 @@ const HomePage = () => {
     }, [])
 
     const loadQuantityFromCart = async () => {
+        
+        if(!signedInUser?.id) return 
+        
          /** fetch cart */
          const exisCartref = query(
             collection(db, CART_DB_NAME),
@@ -74,7 +75,8 @@ const HomePage = () => {
             id: Object.keys(item)[0],
             ...Object.values(item)[0]
         }))
-        setCartDbList(mappedList)
+        productsAction('SET_CART', mappedList)
+
     }
 
 
@@ -105,11 +107,11 @@ const HomePage = () => {
 
         const cartRef = collection(db, CART_DB_NAME);
 
-        if(!cartDbList) {
+        if(!cart) {
             toggle({
                 open: true,
                 // message: 'Some error occured while updating',
-                message: 'emty cartDbList',
+                message: 'emty cart',
                 severity: 'error'
             })
             return
@@ -117,10 +119,10 @@ const HomePage = () => {
 
         /**check User ka entry hai kya */
         let docKey = null
-        const foundRecord = cartDbList.find(item => signedInUser.id === item.forUser)
+        const foundRecord = cart.find(item => signedInUser.id === item.forUser)
 
         if(
-            cartDbList && foundRecord
+            cart && foundRecord
         ) {
 
             docKey = foundRecord.id
