@@ -1,5 +1,6 @@
 export const USER_DB_NAME = "myusers"
 export const PRODUCT_DB_NAME = "myproducts"
+export const CART_DB_NAME = "usertocartdb"
 
 export const DEFAULT_SNACKBAR_OBJECT = {
     open: false,

@@ -34,7 +34,7 @@ const Navbar = () => {
                             </Link>
                         </div>
                         <div>
-                            <Link href="/cart">
+                            <Link href="/orders">
                                 Orders
                             </Link>
                         </div>
@@ -46,9 +46,10 @@ const Navbar = () => {
                             <Link href="/log-in">
                                 Log In
                             </Link> :
-                            <Link href="/sign-up">
+                            !isLoggedInViaCheckingLocal() ? <Link href="/sign-up">
                                 Sign Up
-                            </Link>
+                            </Link> :
+                                <></>
                     }
                 </div>
             </div>
