@@ -11,6 +11,7 @@ import { CART_DB_NAME, USER_DB_NAME } from '../../../../constants';
 import { useUserValue } from '@/contexts/authContext';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { useSnackbarValue } from '@/contexts/snackBarContext';
+import { CoPresentOutlined } from '@mui/icons-material';
 
 const HomePage = () => {
 
@@ -24,39 +25,52 @@ const HomePage = () => {
     const router = useRouter()
 
     useEffect(() => {
-        (
-            async () => {
-                productsAction('SET_LOADING', true)
-
-                const productsArrRes = await fetchProducts('jewelery')
-                productsAction('SET_LOADING', false)
-                productsAction('SET_ALL', productsArrRes)
-                setVisibleProducts(productsArrRes)
-
-                const x = await loadQuantityFromCart()
-            }
-        )()
-
+        
         /** Set user from localstorage */
         if(isLoggedInViaCheckingLocal()) {
             userAction('SET_USER', getLoggedInUserInLocal())
         }
 
     }, [])
+    useEffect(() => {
+        
+        (
+            async () => {
+                if(signedInUser) {
+
+                    productsAction('SET_LOADING', true)
+                    
+                    const productsArrRes = await fetchProducts('jewelery')
+                    productsAction('SET_LOADING', false)
+                    productsAction('SET_ALL', productsArrRes)
+                    setVisibleProducts(productsArrRes)
+                    
+                    if(cart.length === 0) {
+                        const x = await loadQuantityFromCart()
+                    }
+                }
+            }
+        )()
+
+    }, [signedInUser])
 
     /** REFERENCE FOR DELET DOC  */
     useEffect(() => {
         
-        // deleteDoc(doc(db, CART_DB_NAME, "7bjX7USDILqLrjois8gm"))
-        // deleteDoc(doc(db, CART_DB_NAME, "AxbL2BxDVGpxcllEipFh"))
-        // deleteDoc(doc(db, CART_DB_NAME, "Mgsr1Q35nZXPvLKNOCCs"))
+        deleteDoc(doc(db, CART_DB_NAME,  
+            "eEY0tlFzIS35XsiiGKDv"))
+        deleteDoc(doc(db, CART_DB_NAME,"wao3w3BOIe1Zq6D90m1V"))
+        deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
 
           
     }, [])
 
     const loadQuantityFromCart = async () => {
         
-        if(!signedInUser?.id) return 
+        if(!signedInUser?.id) {
+            // alert('user not there')
+            return
+        } 
         
          /** fetch cart */
          const exisCartref = query(
@@ -68,6 +82,10 @@ const HomePage = () => {
         querySnapshot.forEach((doc) => {
             cartDocs.push({
                 [doc.id]: doc.data()
+                // id: doc.id,
+                // {
+                //     ...doc.data()
+                // }
             })
             
         });
@@ -76,6 +94,8 @@ const HomePage = () => {
             ...Object.values(item)[0]
         }))
         productsAction('SET_CART', mappedList)
+        productsAction('SET_CART_ID', mappedList[0].id)
+    console.log('hex: 1',mappedList )
 
     }
 
@@ -133,7 +153,7 @@ const HomePage = () => {
             let updatedItems = [...foundRecord.items]
             
             updatedItems = updatedItems.map(itemObj => {
-                if (itemObj.product.id === productPassed.id) {
+                if (itemObj.id === productPassed.id) {
                     isUpdated = true
                     return {
                         ...itemObj,
@@ -143,14 +163,20 @@ const HomePage = () => {
             })
 
             if(!isUpdated) updatedItems = [{
-                product: productPassed,
+                ...productPassed,
                 quantity: 1
             }, ...updatedItems]
 
+            // let newObj = {
+            //     forUser: signedInUser.id,
+            //     items: [...updatedItems]
+            // }
             let newObj = {
-                forUser: signedInUser.id,
+                ...foundRecord,
                 items: [...updatedItems]
             }
+
+            
             
             const editres = await updateDoc(updateProductRef, newObj);
             const x = await loadQuantityFromCart()
@@ -160,7 +186,7 @@ const HomePage = () => {
                 forUser: signedInUser.id,
                 items: [
                     {
-                        product: productPassed,
+                        ...productPassed,
                         quantity: 1
                     }
                 ]

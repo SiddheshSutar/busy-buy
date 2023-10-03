@@ -19,38 +19,41 @@
             aspect-ratio: 1/1;
         }
 
-        .btn-row {
+        .cost-row {
             display: flex;
             justify-content: space-between;
-            margin-top: auto;
-            
-            .price {
-                font-size: 25px;
-                font-weight: bold;
-                letter-spacing: 2px;
+
+            .quantity-row {
+                display: grid;
+                grid-template-columns: 20px 10ch 20px;
+                place-items: center;
             }
 
-            button {
-                background-color: variables.$dark-bg;
-                border: 2px solid #1976d2;
-                color: #fff;
-                letter-spacing: 1px;
-                cursor: pointer;
-                padding: 8px 11px;
-                transition: all 0.2s ease-in-out;
-                font-weight: bold;
-                font-family: monospace;
-                font-size: 18px;
-                line-height: 1;
+            .add-button {}
+        }
 
-                &:hover {
-                    text-shadow: 1px 0px 3px white;
-                    transform: scale(1.03);
-                }
+
+        button.add-button {
+            background-color: variables.$dark-bg;
+            border: 2px solid #1976d2;
+            color: #fff;
+            letter-spacing: 1px;
+            cursor: pointer;
+            padding: 8px 11px;
+            transition: all 0.2s ease-in-out;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 18px;
+            line-height: 1;
+            width: 100%;
+
+            &:hover {
+                text-shadow: 1px 0px 3px white;
+                transform: scale(1.03);
             }
         }
 
-        
+
     }
 
 
