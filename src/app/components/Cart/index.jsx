@@ -162,20 +162,7 @@ const Cart = () => {
             })
             return
         }
-        
-        // let docKey = null
-        // const foundRecord = cart.find(item => signedInUser.id === item.forUser)
 
-        // if (
-        //     !foundRecord
-        // ) {
-        //     toggle({
-        //         open: true,
-        //         message: 'removeOrderedProductFromCart: Cart record to be deleted not found',
-        //         severity: 'error'
-        //     })
-        //     return
-        // }
         if (
             !cartId
         ) {
@@ -219,12 +206,6 @@ const Cart = () => {
             return
         }
 
-        // if(true) {
-        //     debugger;
-        //     console.log('hex: ', productPassed)
-        //     return
-        // }
-
         toggle({
             open: true,
             message: 'Loading',
@@ -233,15 +214,6 @@ const Cart = () => {
         setDisabled(index)
 
         const orderRef = collection(db, ORDER_DB_NAME);
-
-        // if(!orders || orders.length === 0) {
-        //     toggle({
-        //         open: true,
-        //         message: 'emty cart',
-        //         severity: 'error'
-        //     })
-        //     return
-        // }
 
 
         const docRef = await addDoc(orderRef, {
