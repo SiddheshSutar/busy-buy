@@ -11,7 +11,6 @@ import { CART_DB_NAME, USER_DB_NAME } from '../../../../constants';
 import { useUserValue } from '@/contexts/authContext';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { useSnackbarValue } from '@/contexts/snackBarContext';
-import { CoPresentOutlined } from '@mui/icons-material';
 
 const HomePage = () => {
 
@@ -57,18 +56,28 @@ const HomePage = () => {
     /** REFERENCE FOR DELET DOC  */
     useEffect(() => {
         
-        deleteDoc(doc(db, CART_DB_NAME,  
-            "eEY0tlFzIS35XsiiGKDv"))
-        deleteDoc(doc(db, CART_DB_NAME,"wao3w3BOIe1Zq6D90m1V"))
-        deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
-
+        // deleteDoc(doc(db, CART_DB_NAME,"wao3w3BOIe1Zq6D90m1V"))
+        // deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
+        
+        // (
+        //     async () => {
+        //         const updateProductRef = doc(db, CART_DB_NAME, 7);
+        //         const editres = await updateDoc(updateProductRef, {
+        //             id: 'eEY0tlFzIS35XsiiGKDv'
+        //         });
+        //     }
+        // )()
           
     }, [])
 
     const loadQuantityFromCart = async () => {
         
         if(!signedInUser?.id) {
-            // alert('user not there')
+            toggle({
+                open: true,
+                message: 'No user ID found to map',
+                severity: 'error'
+            })
             return
         } 
         
@@ -82,10 +91,6 @@ const HomePage = () => {
         querySnapshot.forEach((doc) => {
             cartDocs.push({
                 [doc.id]: doc.data()
-                // id: doc.id,
-                // {
-                //     ...doc.data()
-                // }
             })
             
         });
@@ -94,8 +99,7 @@ const HomePage = () => {
             ...Object.values(item)[0]
         }))
         productsAction('SET_CART', mappedList)
-        productsAction('SET_CART_ID', mappedList[0].id)
-    console.log('hex: 1',mappedList )
+        productsAction('SET_CART_ID', mappedList[0]?.id)
 
     }
 
@@ -130,7 +134,6 @@ const HomePage = () => {
         if(!cart) {
             toggle({
                 open: true,
-                // message: 'Some error occured while updating',
                 message: 'emty cart',
                 severity: 'error'
             })
@@ -167,16 +170,11 @@ const HomePage = () => {
                 quantity: 1
             }, ...updatedItems]
 
-            // let newObj = {
-            //     forUser: signedInUser.id,
-            //     items: [...updatedItems]
-            // }
             let newObj = {
                 ...foundRecord,
                 items: [...updatedItems]
             }
 
-            
             
             const editres = await updateDoc(updateProductRef, newObj);
             const x = await loadQuantityFromCart()

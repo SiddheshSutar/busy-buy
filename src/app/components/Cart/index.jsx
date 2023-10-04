@@ -42,8 +42,19 @@ const Cart = () => {
             productsAction('SET_CART', mappedList[0].items.map(item => ({
                 ...item
             })))
+            productsAction('SET_CART_ID',  mappedList[0].id)
         }
     }
+    
+    
+
+    useEffect(() => {
+
+        if (isLoggedInViaCheckingLocal()) {
+            userAction('SET_USER', getLoggedInUserInLocal())
+        }
+
+    }, [])
 
     useEffect(() => {
         (
@@ -57,19 +68,20 @@ const Cart = () => {
 
         )()
     }, [signedInUser])
-
+    
     useEffect(() => {
-
-        if (isLoggedInViaCheckingLocal()) {
-            userAction('SET_USER', getLoggedInUserInLocal())
-        }
-
-    }, [])
-    console.log('hdex: 2: ',cartId )
+    }, [cartId])
 
     const handleAction = async (productPassed, index, actionSign) => {
 
-        if(!cartId) return
+        if(!cartId) {
+            toggle({
+                open: true,
+                message: 'No cart ID found to map',
+                severity: 'error'
+            })
+            return
+        }
 
         const newCart = cart.map(item => {
             if (item.id === productPassed.id) {
@@ -83,7 +95,6 @@ const Cart = () => {
 
         const updateProductRef = doc(db, CART_DB_NAME, cartId);
         const editres = await updateDoc(updateProductRef, {
-            ...productPassed,
             items: newCart
         });
         const x = await loadQuantityFromCart()

@@ -23,12 +23,14 @@ export const ProductsContextProvider = ({ children }) => {
     
     const productsAction = (type, payload) => {
         switch (type) {
-            case 'SET_LOADING':
+            case 'SET_LOADING': {
+                
                 setState(state => ({
                     ...state,
                     loading: payload
                 }))
                 break;
+            }
             case 'SET_CART': {
                 setState(state => ({
                     ...state,
