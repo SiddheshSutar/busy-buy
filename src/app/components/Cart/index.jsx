@@ -71,7 +71,6 @@ const Cart = () => {
             id: Object.keys(item)[0],
             ...Object.values(item)[0]
         }))
-        console.log('hex o: ', mappedList)
 
         if (mappedList[0].items) {
             productsAction('SET_ORDERS', mappedList[0].items.map(item => ({
