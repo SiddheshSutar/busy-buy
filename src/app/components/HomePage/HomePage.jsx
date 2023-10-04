@@ -56,7 +56,7 @@ const HomePage = () => {
     /** REFERENCE FOR DELET DOC  */
     useEffect(() => {
         
-        // deleteDoc(doc(db, CART_DB_NAME,"wao3w3BOIe1Zq6D90m1V"))
+        // deleteDoc(doc(db, CART_DB_NAME,"EYRppYhzPNPkV4D7egbC"))
         // deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
         
         // (
@@ -98,6 +98,7 @@ const HomePage = () => {
             id: Object.keys(item)[0],
             ...Object.values(item)[0]
         }))
+        console.log('hex: c: ', mappedList)
         productsAction('SET_CART', mappedList)
         productsAction('SET_CART_ID', mappedList[0]?.id)
 
@@ -131,21 +132,25 @@ const HomePage = () => {
 
         const cartRef = collection(db, CART_DB_NAME);
 
-        if(!cart) {
-            toggle({
-                open: true,
-                message: 'emty cart',
-                severity: 'error'
-            })
-            return
-        }
+        // if(!cart || cart.length === 0) {
+        //     toggle({
+        //         open: true,
+        //         message: 'empty cart',
+        //         severity: 'error'
+        //     })
+        //     return
+        // }
 
         /**check User ka entry hai kya */
         let docKey = null
         const foundRecord = cart.find(item => signedInUser.id === item.forUser)
 
-        if(
-            cart && foundRecord
+        // if(
+        //     cart && foundRecord
+        // ) {
+            
+        if (
+            foundRecord
         ) {
 
             docKey = foundRecord.id

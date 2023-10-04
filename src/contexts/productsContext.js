@@ -7,7 +7,8 @@ const initialState = {
     cart: [],
     orders: [],
     maxCartValue: 0,
-    cartId: null
+    cartId: null,
+    orderId: null
 }
 
 const ProductsContext = createContext()
@@ -42,6 +43,20 @@ export const ProductsContextProvider = ({ children }) => {
                 setState(state => ({
                     ...state,
                     cartId: payload
+                }))
+                break;
+            }
+            case 'SET_ORDERS': {
+                setState(state => ({
+                    ...state,
+                    orders: payload
+                }))
+                break;
+            }
+            case 'SET_ORDER_ID': {
+                setState(state => ({
+                    ...state,
+                    orderId: payload
                 }))
                 break;
             }
