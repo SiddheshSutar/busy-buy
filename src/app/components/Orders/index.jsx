@@ -80,6 +80,7 @@ const Orders = () => {
                             <thead>
                                 <tr>
                                     <th>Title</th>
+                                    <th>Image</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
                                 </tr>
@@ -88,6 +89,12 @@ const Orders = () => {
                                 {
                                     orders.map((orderObj, index) => (
                                         <tr key={index}>
+                                            <td>
+                                                <img
+                                                    src={orderObj.image}
+                                                    alt={orderObj.title}
+                                                />
+                                            </td>
                                             <td>
                                                 {orderObj.title}
                                             </td>
