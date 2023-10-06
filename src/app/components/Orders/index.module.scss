@@ -1,1 +1,39 @@
+.orders-container {
 
+    font-family: sans-serif;
+    
+    .order-table {
+
+        border: 1px solid red;
+
+        th,
+        td {
+            padding: 20px;
+        }
+
+        th {
+            text-align: left;
+            letter-spacing: 3px;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        tbody {
+            tr:nth-child(odd) {
+                background-color: #c5e1f0;
+
+                td {
+                    border-color: #c5e1f0;
+                }
+
+                td:nth-child(1) {
+                    border-color: transparent;
+                }
+
+                td:last-child {}
+            }
+        }
+    }
+}

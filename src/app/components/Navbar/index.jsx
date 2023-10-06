@@ -24,7 +24,7 @@ const Navbar = () => {
                     Busy Buy
                 </Link>
             </p>
-            <div  className={styles['side-nav']}>
+            <div className={styles['side-nav']}>
                 {
                     isLoggedInViaCheckingLocal() &&
                     <>
@@ -42,13 +42,13 @@ const Navbar = () => {
                 }
                 <div>
                     {
-                        pathname.includes('sign-up') ?
+                        !isLoggedInViaCheckingLocal() ?
                             <Link href="/log-in">
                                 Log In
-                            </Link> :
-                            !isLoggedInViaCheckingLocal() ? <Link href="/sign-up">
-                                Sign Up
-                            </Link> :
+                            </Link> : pathname.includes('sign-up') ?
+                                <Link href="/sign-up">
+                                    Sign Up
+                                </Link> :
                                 <></>
                     }
                 </div>

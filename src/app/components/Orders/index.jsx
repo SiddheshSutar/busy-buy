@@ -7,8 +7,6 @@ import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../../fireStore';
 import { ORDER_DB_NAME } from '../../../../constants';
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Table } from 'antd';
 
 const Orders = () => {
 
@@ -75,43 +73,36 @@ const Orders = () => {
                     !orders || orders.length === 0 &&
                     <p>No orders found yet..</p>
                 }
-{/*                 
                 {
                     orders?.length > 0 &&
-                    <div>
-                        {
-                            orders.map(item => (<>
-                            <div>{JSON.stringify(item)}</div></>))
-                        }
-                    </div>
-                } */}
-                {
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Title</TableCell>
-                                    <TableCell>Quantity</TableCell>
-                                    <TableCell>Price</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                    
-                                {orders?.length > 0 && orders.map((row) => (
-                                    <TableRow
-                                        key={row.title}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {row.title}
-                                        </TableCell>
-                                        <TableCell align="right">{row.quantity}</TableCell>
-                                        <TableCell align="right">{row.price}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <>
+                        <table cellspacing="0" cellpadding="0" className={styles['order-table']} border={0}>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    orders.map((orderObj, index) => (
+                                        <tr key={index}>
+                                            <td>
+                                                {orderObj.title}
+                                            </td>
+                                            <td>
+                                                {orderObj.quantity}
+                                            </td>
+                                            <td>
+                                                {orderObj.price}
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                    </>
                 }
             </div>
         </div>
