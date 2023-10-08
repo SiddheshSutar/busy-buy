@@ -107,7 +107,6 @@ const Cart = () => {
     }, [signedInUser])
 
     useEffect(() => {
-        console.log('hex c: ', cart)
     }, [cart])
 
     const handleAction = async (productPassed, index, actionSign) => {

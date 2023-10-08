@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../../services';
 import { useProductsValue } from '@/contexts/productsContext';
 import styles from './index.module.scss'
-import { Slider, Tooltip } from '@mui/material';
+import { Checkbox, FormControlLabel, FormGroup, Slider, Tooltip } from '@mui/material';
 import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../helpers';
 import { useRouter } from 'next/navigation';
 import { db } from '../../../../fireStore';
@@ -20,6 +20,8 @@ const HomePage = () => {
 
     const [visibleProducts, setVisibleProducts] = useState(products)
     const [disabled, setDisabled] = useState(null)
+    const [checked, setChecked] = useState([false,false,false,false])
+    const [categories, setCategories] = useState([])
 
     const router = useRouter()
 
@@ -39,10 +41,21 @@ const HomePage = () => {
 
                     productsAction('SET_LOADING', true)
                     
-                    const productsArrRes = await fetchProducts('jewelery')
+                    const productsArrRes = await fetchProducts()
                     productsAction('SET_LOADING', false)
                     productsAction('SET_ALL', productsArrRes)
                     setVisibleProducts(productsArrRes)
+
+                    if(productsArrRes.length > 0) {
+                        const categs = [...new Set(productsArrRes.map(item => item.category))]
+
+                        if(categs && categs.length > 0) {
+
+                            setCategories(categs)
+
+                            setChecked(categs.map(item => false))
+                        }
+                    }
                     
                     if(cart.length === 0) {
                         const x = await loadQuantityFromCart()
@@ -98,7 +111,6 @@ const HomePage = () => {
             id: Object.keys(item)[0],
             ...Object.values(item)[0]
         }))
-        console.log('hex: c: ', mappedList)
         productsAction('SET_CART', mappedList)
         productsAction('SET_CART_ID', mappedList[0]?.id)
 
@@ -208,6 +220,20 @@ const HomePage = () => {
 
     }
 
+    const handleCheckBox = (e, checkBoxIndex) => {
+
+        setChecked(state => state.map((item, index) => {
+            if(index === checkBoxIndex) return !item
+            return item
+        }))
+
+        // to-do
+        // setVisibleProducts(prodct => {
+        //     const filteredCategories = categories.filter((item, index) => index === )
+        // } )
+
+    }
+
 
     return (
         <>
@@ -228,6 +254,21 @@ const HomePage = () => {
                             }))
                         }}
                     />
+                    <div>
+                        {
+                            categories.map((categoryItem, indexC) => (
+                                <div key={indexC}>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox
+                                            checked={checked[indexC]}
+                                            onChange={e => handleCheckBox(e, indexC)}
+                                            inputProps={{ 'aria-label': 'controlled' }}
+                                        />} label={categoryItem} />
+                                    </FormGroup>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
                 <div className={styles['products']}>
                     {
