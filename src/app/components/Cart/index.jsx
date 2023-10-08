@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { addDoc, collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import styles from './index.module.scss'
 import { CART_DB_NAME, ORDER_DB_NAME } from '../../../../constants';
 import { db } from '../../../../fireStore';
@@ -164,12 +164,12 @@ const Cart = () => {
         })
     }
 
-    const removeOrderedProductFromCart = async (productPassed) => {
+    const removeProductFromCart = async (productPassed, removeAll) => {
 
         if (!cart || cart.length === 0) {
             toggle({
                 open: true,
-                message: 'removeOrderedProductFromCart: Empty cart',
+                message: 'removeProductFromCart: Empty cart',
                 severity: 'error'
             })
             return
@@ -177,7 +177,7 @@ const Cart = () => {
         if (!signedInUser) {
             toggle({
                 open: true,
-                message: 'removeOrderedProductFromCart: User not found',
+                message: 'removeProductFromCart: User not found',
                 severity: 'error'
             })
             return
@@ -188,13 +188,30 @@ const Cart = () => {
         ) {
             toggle({
                 open: true,
-                message: 'removeOrderedProductFromCart: Cart record to be deleted not found',
+                message: 'removeProductFromCart: Cart record to be deleted not found',
                 severity: 'error'
             })
             return
         }
 
         const updateProductRef = doc(db, CART_DB_NAME, cartId);
+
+        if (
+            removeAll && !productPassed
+        ) {
+            //  deleteDoc(doc(db, CART_DB_NAME,cartId))
+            let newObj = {
+                forUser: signedInUser.id,
+                items: []
+            }
+    
+            const editres = await updateDoc(updateProductRef, newObj);
+            const x = await loadQuantityFromCart()
+            const y = await loadQuantityFromOrders()
+
+            return
+        }
+
 
         /**check Product ka entry hai kya */
         let updatedItems = [...cart]
@@ -215,12 +232,20 @@ const Cart = () => {
 
     }
 
-    const handleOrderNow = async (productPassed, index) => {
+    const handleOrderNow = async () => {
 
         if (!isLoggedInViaCheckingLocal() || !signedInUser || !signedInUser.name) {
             toggle({
                 open: true,
                 message: 'No cart ID found to map',
+                severity: 'error'
+            })
+            return
+        }
+        if (!cart || cart.length=== 0) {
+            toggle({
+                open: true,
+                message: 'Cart is empty',
                 severity: 'error'
             })
             return
@@ -231,37 +256,68 @@ const Cart = () => {
             message: 'Loading',
             severity: 'info'
         })
-        setDisabled(index)
+        setDisabled(true)
 
         const orderRef = collection(db, ORDER_DB_NAME);
 
 
         const docRef = await addDoc(orderRef, {
             forUser: signedInUser.id,
-            items: [
-                {
-                    ...productPassed,
-                }
-            ]
+            items: [...cart]
+            // items: [
+            //     {
+            //         ...productPassed,
+            //     }
+            // ]
         });
 
 
-        await removeOrderedProductFromCart(productPassed)
+        await removeProductFromCart(null, true)
 
         toggle({
             open: true,
             message: 'Order successful!',
             severity: 'success'
         })
-        setDisabled(null)
+        setDisabled(false)
 
+
+    }
+
+    const handleRemove = async (cartItemToBeRemoved, index) => {
+
+        setDisabled(true)
+
+        await removeProductFromCart(cartItemToBeRemoved)
+        toggle({
+            open: true,
+            message: 'Item removed',
+            severity: 'success'
+        })
+        setDisabled(null)
 
     }
 
     return (
         <>
             <div >
-                <h2>My Cart</h2>
+                <div className={styles['title-row']}>
+                    <div className={styles['title-col']}>
+                        <h2>My Cart</h2>
+                    </div>
+                    <div className={styles['title-col']}>
+                        <button className={styles['action-button']} type='button'
+                            onClick={() => handleOrderNow()}
+                        >
+                            {
+                                // index === disabled ?
+                                false ?
+                                    'Processing...' :
+                                    'Order now'
+                            }
+                        </button>
+                    </div>
+                </div>
                 <div className={styles['products']}>
                     {
                         cart.map((item, index) => (
@@ -294,16 +350,10 @@ const Cart = () => {
                                     </div>
                                     <div className={styles['price']}>{`₹ ${item.price * item.quantity}`}</div>
                                 </div>
-                                <button className={styles['add-button']} type='button'
-                                    onClick={() => handleOrderNow(item, index)}
-                                // disabled={index === disabled}
+                                <button className={styles['action-button']} type='button'
+                                    onClick={() => handleRemove(item, index)}
                                 >
-                                    {
-                                        // index === disabled ?
-                                        false ?
-                                            'Processing...' :
-                                            'Order now'
-                                    }
+                                    Remove From Cart
                                 </button>
                             </div>
                         ))
