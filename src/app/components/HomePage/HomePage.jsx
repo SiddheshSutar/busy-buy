@@ -51,7 +51,12 @@ const HomePage = () => {
 
                         if(categs && categs.length > 0) {
 
-                            setCategories(categs)
+                            setCategories(categs.map(item => (
+                                {
+                                    label: item,
+                                    selected: false
+                                }
+                            )))
 
                             setChecked(categs.map(item => false))
                         }
@@ -220,17 +225,32 @@ const HomePage = () => {
 
     }
 
-    const handleCheckBox = (e, checkBoxIndex) => {
+    const handleCheckBox = (e, categorySelected, checkBoxIndex) => {
 
-        setChecked(state => state.map((item, index) => {
-            if(index === checkBoxIndex) return !item
-            return item
-        }))
+        // setChecked(state => state.map((item, index) => {
+            // if(index === checkBoxIndex) return !item
+            // return item
+        // }))
 
-        // to-do
-        // setVisibleProducts(prodct => {
-        //     const filteredCategories = categories.filter((item, index) => index === )
-        // } )
+        const newCategs = categories.map((categoryItem, index) => {
+            if(index === checkBoxIndex) return {
+                ...categoryItem,
+                selected: !categoryItem.selected
+            }
+            return categoryItem
+        })
+        
+        setCategories(newCategs)
+
+
+        let selectedCategs = newCategs.filter(itemP => itemP.selected ).map(item => item.label)
+
+        if(selectedCategs.length === 0) {
+            setVisibleProducts(products)
+        } else {
+            const filteredProducts = products.filter(item => selectedCategs.includes(item.category))
+            setVisibleProducts(filteredProducts)
+        }
 
     }
 
@@ -256,14 +276,15 @@ const HomePage = () => {
                     />
                     <div>
                         {
+                            categories.length > 0 &&
                             categories.map((categoryItem, indexC) => (
                                 <div key={indexC}>
                                     <FormGroup>
                                         <FormControlLabel control={<Checkbox
-                                            checked={checked[indexC]}
-                                            onChange={e => handleCheckBox(e, indexC)}
+                                            checked={categoryItem.selected}
+                                            onChange={e => handleCheckBox(e, categoryItem, indexC)}
                                             inputProps={{ 'aria-label': 'controlled' }}
-                                        />} label={categoryItem} />
+                                        />} label={categoryItem.label} />
                                     </FormGroup>
                                 </div>
                             ))
