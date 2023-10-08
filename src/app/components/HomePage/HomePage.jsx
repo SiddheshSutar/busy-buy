@@ -90,15 +90,6 @@ const HomePage = () => {
 
     const loadQuantityFromCart = async () => {
         
-        if(!signedInUser?.id) {
-            toggle({
-                open: true,
-                message: 'No user ID found to map',
-                severity: 'error'
-            })
-            return
-        } 
-        
          /** fetch cart */
          const exisCartref = query(
             collection(db, CART_DB_NAME),
