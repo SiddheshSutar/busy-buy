@@ -20,7 +20,6 @@ const HomePage = () => {
 
     const [visibleProducts, setVisibleProducts] = useState(products)
     const [disabled, setDisabled] = useState(null)
-    const [checked, setChecked] = useState([false,false,false,false])
     const [categories, setCategories] = useState([])
 
     const router = useRouter()
@@ -58,7 +57,6 @@ const HomePage = () => {
                                 }
                             )))
 
-                            setChecked(categs.map(item => false))
                         }
                     }
                     
@@ -153,9 +151,6 @@ const HomePage = () => {
         let docKey = null
         const foundRecord = cart.find(item => signedInUser.id === item.forUser)
 
-        // if(
-        //     cart && foundRecord
-        // ) {
             
         if (
             foundRecord
@@ -217,11 +212,6 @@ const HomePage = () => {
     }
 
     const handleCheckBox = (e, categorySelected, checkBoxIndex) => {
-
-        // setChecked(state => state.map((item, index) => {
-            // if(index === checkBoxIndex) return !item
-            // return item
-        // }))
 
         const newCategs = categories.map((categoryItem, index) => {
             if(index === checkBoxIndex) return {
