@@ -19,6 +19,8 @@ The browser events are not working properly in recen versions of Chrome and Edge
 
 # Thought process
 
+The design has been kept minimilastic, emphasizing on CRUD operations only in React.
+
 
 Open [http://localhost:8080](http://localhost:8080) with your browser to see the result.
 
