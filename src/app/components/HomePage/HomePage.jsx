@@ -7,7 +7,7 @@ import { Checkbox, FormControlLabel, FormGroup, Slider, Tooltip } from '@mui/mat
 import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../helpers';
 import { useRouter } from 'next/navigation';
 import { db } from '../../../../fireStore';
-import { CART_DB_NAME, USER_DB_NAME } from '../../../../constants';
+import { CART_DB_NAME, ORDER_DB_NAME, USER_DB_NAME } from '../../../../constants';
 import { useUserValue } from '@/contexts/authContext';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { useSnackbarValue } from '@/contexts/snackBarContext';
@@ -75,6 +75,8 @@ const HomePage = () => {
         // deleteDoc(doc(db, CART_DB_NAME,"EYRppYhzPNPkV4D7egbC"))
         // deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
         
+        // deleteDoc(doc(db, ORDER_DB_NAME,"12mYwq9PLGPrabYudcZc"))
+
         // (
         //     async () => {
         //         const updateProductRef = doc(db, CART_DB_NAME, 7);
@@ -87,6 +89,8 @@ const HomePage = () => {
     }, [])
 
     const loadQuantityFromCart = async () => {
+
+        if(!signedInUser.id) return
         
          /** fetch cart */
          const exisCartref = query(
@@ -137,15 +141,6 @@ const HomePage = () => {
         setDisabled(index)
 
         const cartRef = collection(db, CART_DB_NAME);
-
-        // if(!cart || cart.length === 0) {
-        //     toggle({
-        //         open: true,
-        //         message: 'empty cart',
-        //         severity: 'error'
-        //     })
-        //     return
-        // }
 
         /**check User ka entry hai kya */
         let docKey = null

@@ -72,7 +72,7 @@ const Cart = () => {
             ...Object.values(item)[0]
         }))
 
-        if (mappedList[0].items) {
+        if (mappedList?.[0]?.items) {
             productsAction('SET_ORDERS', mappedList[0].items.map(item => ({
                 ...item
             })))
@@ -262,6 +262,7 @@ const Cart = () => {
 
 
         const docRef = await addDoc(orderRef, {
+            createdAt: (new Date()).toISOString(),
             forUser: signedInUser.id,
             items: [...cart]
             // items: [
@@ -280,6 +281,7 @@ const Cart = () => {
             severity: 'success'
         })
         setDisabled(false)
+        router.push('/orders')
 
 
     }

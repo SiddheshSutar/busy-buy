@@ -56,12 +56,21 @@ const Orders = () => {
             ...Object.values(item)[0]
         }))
 
-        if (mappedList[0].items) {
-            productsAction('SET_ORDERS', mappedList[0].items.map(item => ({
-                ...item
-            })))
-            productsAction('SET_ORDER_ID', mappedList[0].id)
+        if (mappedList?.[0]?.items) {
+            productsAction('SET_ORDERS', mappedList)
         }
+    }
+
+    const getDateStamp = dateStr => {
+        let strFormat = ''
+
+        const dateref = (new Date(dateStr))
+
+        if ((dateref).getDate()) {
+            strFormat = `Ordered on ${(dateref).getDate()}-${(dateref).getMonth()}-${(dateref).getFullYear()}, at ${
+                (dateref).getHours()}: ${(dateref).getUTCMinutes()}`
+        }
+        return strFormat
     }
 
     return (
@@ -74,41 +83,52 @@ const Orders = () => {
                 }
                 {
                     orders?.length > 0 &&
-                    <>
-                        <table cellspacing="0" cellpadding="0" className={styles['order-table']} border={0}>
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Image</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    orders.map((orderItem, orderItemIndex) => (
+                        <div key={orderItemIndex} className={styles['order-obj-wrapper']}>
+                            <table cellspacing="0" cellpadding="0" className={styles['order-table']} border={0}>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Image</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        orderItem.items.map((orderObj, index) => (
+                                            <tr key={index}>
+                                                <td>
+                                                    <img
+                                                        src={orderObj.image}
+                                                        alt={orderObj.title}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    {orderObj.title}
+                                                </td>
+                                                <td>
+                                                    {orderObj.quantity}
+                                                </td>
+                                                <td>
+                                                    {orderObj.price}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                            <div className={styles['timestamp-row']}>
                                 {
-                                    orders.map((orderObj, index) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <img
-                                                    src={orderObj.image}
-                                                    alt={orderObj.title}
-                                                />
-                                            </td>
-                                            <td>
-                                                {orderObj.title}
-                                            </td>
-                                            <td>
-                                                {orderObj.quantity}
-                                            </td>
-                                            <td>
-                                                {orderObj.price}
-                                            </td>
-                                        </tr>
-                                    ))
+                                    orderItem.createdAt && getDateStamp(orderItem.createdAt) &&
+                                    <div>
+                                        {getDateStamp(orderItem.createdAt)}
+                                    </div>
                                 }
-                            </tbody>
-                        </table>
-                    </>
+                            </div>
+                        </div>
+                    ))
+
                 }
             </div>
         </div>
