@@ -107,7 +107,8 @@ const Cart = () => {
     }, [signedInUser])
 
     useEffect(() => {
-    }, [cartId])
+        console.log('hex c: ', cart)
+    }, [cart])
 
     const handleAction = async (productPassed, index, actionSign) => {
 
@@ -120,14 +121,35 @@ const Cart = () => {
             return
         }
 
-        const newCart = cart.map(item => {
-            if (item.id === productPassed.id) {
-                return {
-                    ...item,
-                    quantity: actionSign === '+' ? item.quantity + 1 : item.quantity - 1
-                }
-            } else return item
-        })
+        if (actionSign === '-' && productPassed.quantity === 0) {
+            return
+        }
+
+        if (actionSign === '+' && productPassed.quantity + 1 > 4) {
+            toggle({
+                open: true,
+                message: 'Max order limit reached : 4',
+                severity: 'error'
+            })
+            return
+        }
+
+        let newCart = [...cart]
+
+        if (actionSign === '-' && productPassed.quantity === 1) {
+            newCart = cart.filter(item => item.id !== productPassed.id)
+        } else {
+            newCart = cart.map(item => {
+                if (item.id === productPassed.id) {
+                    return {
+                        ...item,
+                        quantity: actionSign === '+' ? item.quantity + 1 : item.quantity - 1
+                    }
+                } else return item
+            })
+        }
+
+
         productsAction('SET_CART', newCart)
 
         const updateProductRef = doc(db, CART_DB_NAME, cartId);
