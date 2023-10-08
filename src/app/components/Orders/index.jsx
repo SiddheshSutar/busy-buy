@@ -12,7 +12,6 @@ const Orders = () => {
 
     const { signedInUser, userAction } = useUserValue()
     const { products, productsAction, loading, maxCartValue, cart, cartId, orders } = useProductsValue()
-    console.log('hex o: ', orders)
 
     useEffect(() => {
 
