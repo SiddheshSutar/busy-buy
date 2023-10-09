@@ -12,5 +12,3 @@ export const DEFAULT_SNACKBAR_OBJECT = {
 }
 
 export const LS_TOKEN_NAME = 'logintoken'
-
-// loading UI, sticky header, logout, comments

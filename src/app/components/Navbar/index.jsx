@@ -3,11 +3,17 @@ import React from 'react'
 import styles from './index.module.scss'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import { isLoggedInViaCheckingLocal } from '../../../../helpers';
+import { isLoggedInViaCheckingLocal, removeLogInFromLocal } from '../../../../helpers';
 
 const Navbar = () => {
 
     const pathname = usePathname()
+
+    const handleSignOut = e => {
+        e.preventDefault()
+        removeLogInFromLocal()
+        window.open('/', '_self')
+    }
 
     return (
         <div className={styles['main-nav']}>
@@ -36,6 +42,11 @@ const Navbar = () => {
                         <div>
                             <Link href="/orders">
                                 Orders
+                            </Link>
+                        </div>
+                        <div>
+                            <Link href="/sign-out" onClick={e => handleSignOut(e)}>
+                                Sign Out
                             </Link>
                         </div>
                     </>
