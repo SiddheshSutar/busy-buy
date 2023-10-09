@@ -107,11 +107,11 @@ const HomePage = () => {
         }
     }
 
+    /** fetch cart */
     const loadQuantityFromCart = async () => {
 
         if (!signedInUser.id) return
 
-        /** fetch cart */
         const exisCartref = query(
             collection(db, CART_DB_NAME),
             where('forUser', '==', signedInUser.id),
@@ -147,6 +147,9 @@ const HomePage = () => {
 
     const handleAddToCart = async (productPassed, index) => {
 
+        /** Check whether the variables needed to execute add to cart API call are there opr not;
+         * then only make the request
+         */
         if (!isLoggedInViaCheckingLocal() || !signedInUser || !signedInUser.name) {
             router.push('/log-in')
             return
@@ -157,6 +160,8 @@ const HomePage = () => {
             message: 'Loading',
             severity: 'info'
         })
+
+
         setDisabled(index)
 
         const cartRef = collection(db, CART_DB_NAME);
@@ -225,6 +230,7 @@ const HomePage = () => {
 
     }
 
+    /** Filter records based on user input keywords */
     const handleCheckBox = (e, categorySelected, checkBoxIndex) => {
 
         const newCategs = categories.map((categoryItem, index) => {

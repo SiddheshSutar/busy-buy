@@ -23,7 +23,9 @@ const SignUp = () => {
         if (!name || !email || !password) {
             toggle({
                 open: true,
-                message: 'Validation error',
+                message: `Please enter ${
+                    !name ? 'name' : !email ? 'email' : 'password'
+                }`,
                 severity: 'error'
             })
             return

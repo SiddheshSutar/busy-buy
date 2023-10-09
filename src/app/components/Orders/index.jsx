@@ -14,7 +14,7 @@ const Orders = () => {
     const { products, productsAction, loading, maxCartValue, cart, cartId, orders } = useProductsValue()
 
     useEffect(() => {
-
+        /** needed to set context state to avoid null values when switch pages */
         if (isLoggedInViaCheckingLocal()) {
             userAction('SET_USER', getLoggedInUserInLocal())
         }
@@ -34,6 +34,7 @@ const Orders = () => {
         )()
     }, [signedInUser])
 
+    /** Fetch Order list */
     const loadQuantityFromOrders = async () => {
 
         if (!signedInUser?.id) return

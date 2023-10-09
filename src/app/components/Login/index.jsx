@@ -26,7 +26,9 @@ const LogIn = () => {
         if (!name || !password) {
             toggle({
                 open: true,
-                message: 'Validation error',
+                message: `Please enter ${
+                    !name ? 'name' : 'password'
+                }`,
                 severity: 'error'
             })
             return

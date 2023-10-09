@@ -109,6 +109,7 @@ const Cart = () => {
     useEffect(() => {
     }, [cart])
 
+    /** handle increment-decerement of products count and immediately set that in API cart */
     const handleAction = async (productPassed, index, actionSign) => {
 
         if (!cartId) {
@@ -164,6 +165,7 @@ const Cart = () => {
         })
     }
 
+    /** HELPER function to directly remove particular product */
     const removeProductFromCart = async (productPassed, removeAll) => {
 
         if (!cart || cart.length === 0) {
@@ -232,6 +234,7 @@ const Cart = () => {
 
     }
 
+    /** Create order for all items in cart */
     const handleOrderNow = async () => {
 
         if (!isLoggedInViaCheckingLocal() || !signedInUser || !signedInUser.name) {
@@ -265,11 +268,6 @@ const Cart = () => {
             createdAt: (new Date()).toISOString(),
             forUser: signedInUser.id,
             items: [...cart]
-            // items: [
-            //     {
-            //         ...productPassed,
-            //     }
-            // ]
         });
 
 
@@ -286,6 +284,7 @@ const Cart = () => {
 
     }
 
+    /** direct remove particular product */
     const handleRemove = async (cartItemToBeRemoved, index) => {
 
         setDisabled(true)
