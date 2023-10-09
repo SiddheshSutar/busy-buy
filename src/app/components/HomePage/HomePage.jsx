@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../../services';
 import { useProductsValue } from '@/contexts/productsContext';
 import styles from './index.module.scss'
-import { Checkbox, FormControlLabel, FormGroup, Slider, TextField, Tooltip } from '@mui/material';
+import { Checkbox, FormControlLabel, FormGroup, Input, Slider, Tooltip } from '@mui/material';
 import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../helpers';
 import { useRouter } from 'next/navigation';
 import { db } from '../../../../fireStore';
@@ -39,6 +39,7 @@ const HomePage = () => {
             async () => {
                 if (signedInUser) {
 
+                    /** Load products from API */
                     productsAction('SET_LOADING', true)
 
                     const productsArrRes = await fetchProducts()
@@ -46,6 +47,7 @@ const HomePage = () => {
                     productsAction('SET_ALL', productsArrRes)
                     setVisibleProducts(productsArrRes)
 
+                    /** Compute categories of filters */
                     if (productsArrRes.length > 0) {
                         const categs = [...new Set(productsArrRes.map(item => item.category))]
 
@@ -60,7 +62,8 @@ const HomePage = () => {
 
                         }
                     }
-
+                    
+                    /** Load cart from DB */
                     if (cart.length === 0) {
                         const x = await loadQuantityFromCart()
                     }
@@ -89,6 +92,7 @@ const HomePage = () => {
 
     }, [])
 
+    /** FIlter products via  */
     const handleSearchChange = e => {
         const newValue = e.target.value
         setSearchText(newValue)
@@ -97,7 +101,7 @@ const HomePage = () => {
             setVisibleProducts(products)
         } else {
             setVisibleProducts(visibleProducts.filter(prodc => {
-                return prodc.title.includes(newValue) || prodc.description.includes(newValue)
+                return prodc.title.toLowerCase().includes(newValue.toLowerCase()) || prodc.description.toLowerCase().includes(newValue.toLowerCase())
             }))
 
         }
@@ -252,7 +256,7 @@ const HomePage = () => {
                 <div className={styles['filters']}>
                     <h4>Search by text</h4>
                     <div className={styles['search-container']}>
-                        <TextField
+                        <Input
                             className={styles['search']}
                             placeholder='Search'
                             value={searchText}
@@ -263,7 +267,7 @@ const HomePage = () => {
                                     padding: '10px'
                                 }
                             }}
-                            onChange={e => handleSearchChange(e.target.value)}
+                            onChange={e => handleSearchChange(e)}
                         />
                     </div>
                     <div className={styles['filters-container']}>
