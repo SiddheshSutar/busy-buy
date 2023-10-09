@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../../services';
 import { useProductsValue } from '@/contexts/productsContext';
 import styles from './index.module.scss'
-import { Checkbox, FormControlLabel, FormGroup, Slider, Tooltip } from '@mui/material';
+import { Checkbox, FormControlLabel, FormGroup, Slider, TextField, Tooltip } from '@mui/material';
 import { getLoggedInUserInLocal, isLoggedInViaCheckingLocal } from '../../../../helpers';
 import { useRouter } from 'next/navigation';
 import { db } from '../../../../fireStore';
@@ -18,6 +18,7 @@ const HomePage = () => {
     const { signedInUser, userAction } = useUserValue()
     const { toggle } = useSnackbarValue()
 
+    const [searchText, setSearchText] = useState('')
     const [visibleProducts, setVisibleProducts] = useState(products)
     const [disabled, setDisabled] = useState(null)
     const [categories, setCategories] = useState([])
@@ -25,30 +26,30 @@ const HomePage = () => {
     const router = useRouter()
 
     useEffect(() => {
-        
+
         /** Set user from localstorage */
-        if(isLoggedInViaCheckingLocal()) {
+        if (isLoggedInViaCheckingLocal()) {
             userAction('SET_USER', getLoggedInUserInLocal())
         }
 
     }, [])
     useEffect(() => {
-        
+
         (
             async () => {
-                if(signedInUser) {
+                if (signedInUser) {
 
                     productsAction('SET_LOADING', true)
-                    
+
                     const productsArrRes = await fetchProducts()
                     productsAction('SET_LOADING', false)
                     productsAction('SET_ALL', productsArrRes)
                     setVisibleProducts(productsArrRes)
 
-                    if(productsArrRes.length > 0) {
+                    if (productsArrRes.length > 0) {
                         const categs = [...new Set(productsArrRes.map(item => item.category))]
 
-                        if(categs && categs.length > 0) {
+                        if (categs && categs.length > 0) {
 
                             setCategories(categs.map(item => (
                                 {
@@ -59,8 +60,8 @@ const HomePage = () => {
 
                         }
                     }
-                    
-                    if(cart.length === 0) {
+
+                    if (cart.length === 0) {
                         const x = await loadQuantityFromCart()
                     }
                 }
@@ -71,10 +72,10 @@ const HomePage = () => {
 
     /** REFERENCE FOR DELET DOC  */
     useEffect(() => {
-        
+
         // deleteDoc(doc(db, CART_DB_NAME,"EYRppYhzPNPkV4D7egbC"))
         // deleteDoc(doc(db, CART_DB_NAME,'yKm82FPDh8e9oScze2g8'))
-        
+
         // deleteDoc(doc(db, ORDER_DB_NAME,"12mYwq9PLGPrabYudcZc"))
 
         // (
@@ -85,15 +86,29 @@ const HomePage = () => {
         //         });
         //     }
         // )()
-          
+
     }, [])
+
+    const handleSearchChange = e => {
+        const newValue = e.target.value
+        setSearchText(newValue)
+
+        if (!newValue) {
+            setVisibleProducts(products)
+        } else {
+            setVisibleProducts(visibleProducts.filter(prodc => {
+                return prodc.title.includes(newValue) || prodc.description.includes(newValue)
+            }))
+
+        }
+    }
 
     const loadQuantityFromCart = async () => {
 
-        if(!signedInUser.id) return
-        
-         /** fetch cart */
-         const exisCartref = query(
+        if (!signedInUser.id) return
+
+        /** fetch cart */
+        const exisCartref = query(
             collection(db, CART_DB_NAME),
             where('forUser', '==', signedInUser.id),
         );
@@ -103,7 +118,7 @@ const HomePage = () => {
             cartDocs.push({
                 [doc.id]: doc.data()
             })
-            
+
         });
         const mappedList = cartDocs.map(item => ({
             id: Object.keys(item)[0],
@@ -146,7 +161,7 @@ const HomePage = () => {
         let docKey = null
         const foundRecord = cart.find(item => signedInUser.id === item.forUser)
 
-            
+
         if (
             foundRecord
         ) {
@@ -157,18 +172,18 @@ const HomePage = () => {
             /**check Product ka entry hai kya */
             let isUpdated = false
             let updatedItems = [...foundRecord.items]
-            
+
             updatedItems = updatedItems.map(itemObj => {
                 if (itemObj.id === productPassed.id) {
                     isUpdated = true
                     return {
                         ...itemObj,
-                        quantity : itemObj.quantity + 1
+                        quantity: itemObj.quantity + 1
                     }
                 } else return itemObj
             })
 
-            if(!isUpdated) updatedItems = [{
+            if (!isUpdated) updatedItems = [{
                 ...productPassed,
                 quantity: 1
             }, ...updatedItems]
@@ -178,7 +193,7 @@ const HomePage = () => {
                 items: [...updatedItems]
             }
 
-            
+
             const editres = await updateDoc(updateProductRef, newObj);
             const x = await loadQuantityFromCart()
 
@@ -209,19 +224,19 @@ const HomePage = () => {
     const handleCheckBox = (e, categorySelected, checkBoxIndex) => {
 
         const newCategs = categories.map((categoryItem, index) => {
-            if(index === checkBoxIndex) return {
+            if (index === checkBoxIndex) return {
                 ...categoryItem,
                 selected: !categoryItem.selected
             }
             return categoryItem
         })
-        
+
         setCategories(newCategs)
 
 
-        let selectedCategs = newCategs.filter(itemP => itemP.selected ).map(item => item.label)
+        let selectedCategs = newCategs.filter(itemP => itemP.selected).map(item => item.label)
 
-        if(selectedCategs.length === 0) {
+        if (selectedCategs.length === 0) {
             setVisibleProducts(products)
         } else {
             const filteredProducts = products.filter(item => selectedCategs.includes(item.category))
@@ -235,22 +250,45 @@ const HomePage = () => {
         <>
             <div className={styles['container']}>
                 <div className={styles['filters']}>
-                    <h3>Filters</h3>
-                    <Slider
-                        size="small"
-                        defaultValue={100}
-                        aria-label="Small"
-                        valueLabelDisplay="on"
-                        slots={{
-                            valueLabel: ValueLabelComponent,
-                        }}
-                        onChange={e => {
-                            setVisibleProducts(products.filter(item => {
-                                return item.price <= ((e.target.value * maxCartValue) / 100)
-                            }))
-                        }}
-                    />
+                    <h4>Search by text</h4>
+                    <div className={styles['search-container']}>
+                        <TextField
+                            className={styles['search']}
+                            placeholder='Search'
+                            value={searchText}
+                            name='search'
+                            type='search'
+                            sx={{
+                                '.MuiInputBase-input.MuiOutlinedInput-input': {
+                                    padding: '10px'
+                                }
+                            }}
+                            onChange={e => handleSearchChange(e.target.value)}
+                        />
+                    </div>
+                    <div className={styles['filters-container']}>
+                        <h4>Price Range</h4>
+                        <div className={styles['slider']}>
+                            <Slider
+                                size="small"
+                                min={0}
+                                max={maxCartValue}
+                                defaultValue={100}
+                                aria-label="Small"
+                                valueLabelDisplay="on"
+                                slots={{
+                                    valueLabel: ValueLabelComponent,
+                                }}
+                                onChange={e => {
+                                    setVisibleProducts(products.filter(item => {
+                                        return item.price <= ((e.target.value * maxCartValue) / 100)
+                                    }))
+                                }}
+                            />
+                        </div>
+                    </div>
                     <div>
+                        <h4>Search by category</h4>
                         {
                             categories.length > 0 &&
                             categories.map((categoryItem, indexC) => (
